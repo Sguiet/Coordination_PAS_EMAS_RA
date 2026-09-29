@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordination PAS EMAS - RA</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full bg-slate-50 text-slate-800 flex flex-col font-sans antialiased">
+
+    <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <h1 class="text-xl font-bold tracking-tight">Coordination PAS EMAS - RA</h1>
+                <p class="text-xs text-indigo-200 font-medium">8 collègues — 27 Écoles</p>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <div class="flex flex-wrap bg-indigo-950/60 p-1 rounded-xl border border-indigo-700/50 gap-1">
+                <button onclick="switchTab('sectors')" id="tab-sectors" class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 bg-indigo-600 text-white shadow-sm flex items-center space-x-2">
+                    <i class="fa-solid fa-earth-europe"></i>
+                    <span>Secteurs</span>
+                </button>
+                <button onclick="switchTab('colleagues')" id="tab-colleagues" class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 text-indigo-200 hover:text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-users"></i>
+                    <span>Collègues</span>
+                </button>
+                <button onclick="switchTab('map')" id="tab-map" class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 text-indigo-200 hover:text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-map-location-dot text-indigo-300"></i>
+                    <span>Carte</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- ==================== VIEW 1: SECTORS MAP VIEW ==================== -->
+        <div id="view-sectors" class="space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900" id="sectors-title">Carte des 3 Secteurs PAS</h2>
+                    <p class="text-sm text-slate-500" id="sectors-subtitle">Cliquez sur un secteur pour explorer ses communes et collègues rattachés</p>
+                </div>
+                <div id="back-to-sectors-container" class="hidden">
+                    <button onclick="resetSectorView()" class="inline-flex items-center space-x-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-4 py-2 rounded-xl text-sm transition-colors">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Retour aux 3 Secteurs</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sectors Grid -->
+            <div id="sectors-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- PAS Guérande Atlantique -->
+                <div onclick="selectSector('guerande')" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-indigo-500 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-emerald-50 text-emerald-700 text-xs font-semibold px-3 py-1 rounded-full border border-emerald-200">14 Écoles</span>
+                            <div class="w-10 h-10 rounded-xl bg-emerald-50 group-hover:bg-indigo-50 text-emerald-600 group-hover:text-indigo-600 flex items-center justify-center transition-colors">
+                                <i class="fa-solid fa-school text-lg"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">PAS Guérande Atlantique</h3>
+                        <p class="text-xs text-slate-500 mt-1">5 collègues</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-medium text-indigo-600">
+                        <span>Explorer le secteur</span>
+                        <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- PAS Saint Nazaire Ouest -->
+                <div onclick="selectSector('st_nazaire_ouest')" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-indigo-500 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full border border-blue-200">7 Écoles</span>
+                            <div class="w-10 h-10 rounded-xl bg-blue-50 group-hover:bg-indigo-50 text-blue-600 group-hover:text-indigo-600 flex items-center justify-center transition-colors">
+                                <i class="fa-solid fa-school text-lg"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">PAS Saint Nazaire Ouest</h3>
+                        <p class="text-xs text-slate-500 mt-1">4 collègues</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-medium text-indigo-600">
+                        <span>Explorer le secteur</span>
+                        <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+
+                <!-- PAS Saint Nazaire Est -->
+                <div onclick="selectSector('st_nazaire_est')" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 hover:border-indigo-500 hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <span class="bg-purple-50 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full border border-purple-200">6 Écoles</span>
+                            <div class="w-10 h-10 rounded-xl bg-purple-50 group-hover:bg-indigo-50 text-purple-600 group-hover:text-indigo-600 flex items-center justify-center transition-colors">
+                                <i class="fa-solid fa-school text-lg"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">PAS Saint Nazaire Est</h3>
+                        <p class="text-xs text-slate-500 mt-1">4 collègues</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-sm font-medium text-indigo-600">
+                        <span>Explorer le secteur</span>
+                        <i class="fa-solid fa-arrow-right transform group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sector-detail-container" class="hidden space-y-6"></div>
+        </div>
+
+        <!-- ==================== VIEW 2: COLLEAGUE SEARCH VIEW ==================== -->
+        <div id="view-colleagues" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                <h2 class="text-xl font-bold text-slate-900 mb-1">Recherche Globale par Collègue</h2>
+                <p class="text-sm text-slate-500 mb-6">Sélectionnez une collègue ou tapez son nom pour voir ses affectations transversales sur l'ensemble des secteurs</p>
+                
+                <div class="space-y-4">
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </span>
+                        <input type="text" id="colleague-search-input" oninput="filterColleagues(this.value)" placeholder="Rechercher par nom (ex: Sandrine Derriano, Isabelle Mazan...)" class="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:bg-white outline-none text-sm transition-all">
+                    </div>
+                    <div id="colleague-pills" class="flex flex-wrap gap-2 pt-2"></div>
+                </div>
+            </div>
+            <div id="colleagues-profiles-container" class="space-y-6"></div>
+        </div>
+
+        <!-- ==================== VIEW 3: VECTOR GEOGRAPHICAL MAP ==================== -->
+        <div id="view-map" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900">Carte Géographique Vectorielle</h2>
+                    <p class="text-sm text-slate-500">Cliquez sur une commune pour consulter ses écoles et ses collègues rattachés</p>
+                </div>
+                <div class="flex items-center space-x-2 text-xs font-semibold bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-xl border border-indigo-100">
+                    <i class="fa-solid fa-location-crosshairs text-indigo-500"></i>
+                    <span>27 Écoles</span>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Interactive Vector Map Area -->
+                <div class="lg:col-span-2 bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-800 flex flex-col items-center justify-center relative overflow-hidden min-h-[500px]">
+                    <div class="absolute top-4 left-4 text-xs font-medium text-slate-400 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700">
+                        <i class="fa-solid fa-circle-info mr-1.5 text-indigo-400"></i> Cliquez sur un marqueur de commune
+                    </div>
+
+                    <!-- Custom SVG Vectorial Map Representation -->
+                    <div class="relative w-full max-w-xl aspect-[4/3] flex items-center justify-center">
+                        <svg viewBox="0 0 800 600" class="w-full h-full drop-shadow-2xl">
+                            <!-- Background estuary and ocean contours -->
+                            <path d="M 50,100 Q 250,50 500,80 T 750,150 L 750,500 Q 500,550 200,520 T 50,400 Z" fill="#1e293b" stroke="#334155" stroke-width="4"/>
+                            <path d="M 400,300 Q 550,350 750,320 L 750,500 Q 500,550 350,450 Z" fill="#0f172a" opacity="0.6"/>
+
+                            <!-- Sectors zone highlights -->
+                            <ellipse cx="280" cy="220" rx="160" ry="110" fill="#059669" fill-opacity="0.15" stroke="#10b981" stroke-width="2" stroke-dasharray="6 6"/>
+                            <text x="180" y="130" fill="#34d399" font-size="14" font-weight="bold">PAS Guérande Atlantique</text>
+
+                            <ellipse cx="480" cy="380" rx="110" ry="90" fill="#2563eb" fill-opacity="0.15" stroke="#3b82f6" stroke-width="2" stroke-dasharray="6 6"/>
+                            <text x="400" y="470" fill="#60a5fa" font-size="14" font-weight="bold">PAS St Nazaire Ouest</text>
+
+                            <ellipse cx="600" cy="230" rx="110" ry="90" fill="#7c3aed" fill-opacity="0.15" stroke="#8b5cf6" stroke-width="2" stroke-dasharray="6 6"/>
+                            <text x="530" y="110" fill="#a78bfa" font-size="14" font-weight="bold">PAS St Nazaire Est</text>
+
+                            <!-- Communes Interactive Pins -->
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Assérac')">
+                                <circle cx="160" cy="140" r="10" class="fill-emerald-500 hover:fill-white transition-all"/>
+                                <text x="130" y="170" fill="#ffffff" font-size="12" font-weight="600">Assérac</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Herbignac')">
+                                <circle cx="280" cy="120" r="10" class="fill-emerald-500 hover:fill-white transition-all"/>
+                                <text x="250" y="105" fill="#ffffff" font-size="12" font-weight="600">Herbignac</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('La Chapelle des Marais')">
+                                <circle cx="420" cy="170" r="10" class="fill-purple-500 hover:fill-white transition-all"/>
+                                <text x="360" y="200" fill="#ffffff" font-size="12" font-weight="600">La Chapelle des Marais</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Saint Joachim')">
+                                <circle cx="480" cy="230" r="10" class="fill-purple-500 hover:fill-white transition-all"/>
+                                <text x="440" y="260" fill="#ffffff" font-size="12" font-weight="600">Saint Joachim</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Montoir de Bretagne')">
+                                <circle cx="610" cy="270" r="10" class="fill-purple-500 hover:fill-white transition-all"/>
+                                <text x="560" y="300" fill="#ffffff" font-size="12" font-weight="600">Montoir de Bretagne</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Guérande')">
+                                <circle cx="270" cy="230" r="12" class="fill-emerald-500 hover:fill-white transition-all"/>
+                                <text x="235" y="260" fill="#ffffff" font-size="13" font-weight="bold">Guérande</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('La Turballe')">
+                                <circle cx="150" cy="220" r="10" class="fill-emerald-500 hover:fill-white transition-all"/>
+                                <text x="110" y="250" fill="#ffffff" font-size="12" font-weight="600">La Turballe</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Piriac sur Mer')">
+                                <circle cx="100" cy="180" r="10" class="fill-emerald-500 hover:fill-white transition-all"/>
+                                <text x="60" y="175" fill="#ffffff" font-size="12" font-weight="600">Piriac sur Mer</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Le Croisic')">
+                                <circle cx="130" cy="330" r="10" class="fill-emerald-500 hover:fill-white transition-all"/>
+                                <text x="80" y="355" fill="#ffffff" font-size="12" font-weight="600">Le Croisic</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Batz sur Mer')">
+                                <circle cx="190" cy="310" r="10" class="fill-emerald-500 hover:fill-white transition-all"/>
+                                <text x="150" y="340" fill="#ffffff" font-size="12" font-weight="600">Batz sur Mer</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Saint Molf')">
+                                <circle cx="210" cy="170" r="10" class="fill-emerald-500 hover:fill-white transition-all"/>
+                                <text x="180" y="195" fill="#ffffff" font-size="12" font-weight="600">Saint Molf</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Saint Lyphard')">
+                                <circle cx="340" cy="160" r="10" class="fill-emerald-500 hover:fill-white transition-all"/>
+                                <text x="300" y="145" fill="#ffffff" font-size="12" font-weight="600">Saint Lyphard</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('La Baule Escoublac')">
+                                <circle cx="300" cy="310" r="11" class="fill-emerald-500 hover:fill-white transition-all"/>
+                                <text x="250" y="335" fill="#ffffff" font-size="12" font-weight="600">La Baule</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Le Pouliguen')">
+                                <circle cx="250" cy="320" r="10" class="fill-emerald-500 hover:fill-white transition-all"/>
+                                <text x="210" y="350" fill="#ffffff" font-size="12" font-weight="600">Le Pouliguen</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Pornichet')">
+                                <circle cx="390" cy="380" r="11" class="fill-blue-500 hover:fill-white transition-all"/>
+                                <text x="350" y="415" fill="#ffffff" font-size="12" font-weight="600">Pornichet</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Saint André des Eaux')">
+                                <circle cx="380" cy="300" r="10" class="fill-blue-500 hover:fill-white transition-all"/>
+                                <text x="320" y="280" fill="#ffffff" font-size="11" font-weight="600">St André des Eaux</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Saint Marc sur Mer')">
+                                <circle cx="480" cy="380" r="10" class="fill-blue-500 hover:fill-white transition-all"/>
+                                <text x="440" y="415" fill="#ffffff" font-size="11" font-weight="600">St Marc</text>
+                            </g>
+
+                            <g class="cursor-pointer group" onclick="selectMapCommune('Saint Nazaire')">
+                                <circle cx="620" cy="350" r="14" class="fill-indigo-400 hover:fill-white transition-all"/>
+                                <circle cx="620" cy="350" r="20" fill="none" stroke="#818cf8" stroke-width="2"/>
+                                <text x="590" y="390" fill="#ffffff" font-size="13" font-weight="bold">Saint Nazaire</text>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Commune Detail Card Side Panel -->
+                <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-3 pb-4 mb-4 border-b border-slate-100">
+                            <div class="bg-indigo-50 text-indigo-600 p-3 rounded-xl">
+                                <i class="fa-solid fa-map-pin text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900" id="map-panel-title">Sélectionnez une commune</h3>
+                                <p class="text-xs text-slate-500" id="map-panel-subtitle">Cliquez sur un point de la carte interactive</p>
+                            </div>
+                        </div>
+                        <div id="map-panel-content" class="space-y-4">
+                            <div class="text-center py-12 text-slate-400">
+                                <i class="fa-solid fa-hand-pointer text-3xl mb-2"></i>
+                                <p class="text-sm">Les informations de l'école et de la collègue rattachée s'afficheront ici.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 text-xs text-slate-400 text-center">
+                        <span>Cartographie interactive vectorielle 100% stable</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 mt-auto py-4 text-center text-xs text-slate-500">
+        <p>Coordination PAS EMAS - RA • Base de données synchronisée | 8 Collègues / 27 Écoles</p>
+    </footer>
+
+    <script>
+        const database = {
+            sectors: {
+                guerande: {
+                    name: "PAS Guérande Atlantique",
+                    totalSchools: 14,
+                    color: "emerald",
+                    colleagues: [
+                        {
+                            name: "Sandrine Derriano",
+                            schools: [
+                                { commune: "Assérac", name: "École Sainte Anne" },
+                                { commune: "Guérande", name: "École Saint Joseph (La Madeleine)" },
+                                { commune: "Piriac sur Mer", name: "École Notre Dame du Rosaire" }
+                            ]
+                        },
+                        {
+                            name: "Françoise Perette",
+                            schools: [
+                                { commune: "Batz sur Mer", name: "École Sainte Marie Saint Pierre" },
+                                { commune: "Le Croisic", name: "École Saint Goustan" },
+                                { commune: "Guérande", name: "École Saint Aubin La Mennais" },
+                                { commune: "Guérande", name: "École Sainte Marie" },
+                                { commune: "Saint Molf", name: "École Saint François" }
+                            ]
+                        },
+                        {
+                            name: "Djamila Brilla",
+                            schools: [
+                                { commune: "La Baule Escoublac", name: "École Le Sacré Cœur" },
+                                { commune: "Le Pouliguen", name: "École Sainte Marie" }
+                            ]
+                        },
+                        {
+                            name: "Catherine Nassif",
+                            schools: [
+                                { commune: "La Baule Escoublac", name: "École Saint Joseph" },
+                                { commune: "La Turballe", name: "École Sainte Marie de l'Océan" }
+                            ]
+                        },
+                        {
+                            name: "Sylvie Uzureau",
+                            schools: [
+                                { commune: "Herbignac", name: "École Sainte Marie La Mennais" },
+                                { commune: "Saint Lyphard", name: "École Sainte Anne" }
+                            ]
+                        }
+                    ]
+                },
+                st_nazaire_ouest: {
+                    name: "PAS Saint Nazaire Ouest",
+                    totalSchools: 7,
+                    color: "blue",
+                    colleagues: [
+                        {
+                            name: "Djamila Brilla",
+                            schools: [
+                                { commune: "Pornichet", name: "École Sainte Germaine" },
+                                { commune: "Pornichet", name: "École Saint Jean" }
+                            ]
+                        },
+                        {
+                            name: "Sandrine Derriano",
+                            schools: [
+                                { commune: "Saint André des Eaux", name: "École Notre Dame du Sacré Cœur" }
+                            ]
+                        },
+                        {
+                            name: "Christine Bect",
+                            schools: [
+                                { commune: "Saint Nazaire", name: "École Notre Dame de Toutes Aides (site Sainte Thérèse)" }
+                            ]
+                        },
+                        {
+                            name: "Isabelle Mazan",
+                            schools: [
+                                { commune: "Saint Nazaire", name: "École Saint Jean Sainte Bernadette" },
+                                { commune: "Saint Nazaire", name: "École Sainte Marie de l'Océan de l'Immaculée" },
+                                { commune: "Saint Marc sur Mer", name: "École Saint Joseph" }
+                            ]
+                        }
+                    ]
+                },
+                st_nazaire_est: {
+                    name: "PAS Saint Nazaire Est",
+                    totalSchools: 6,
+                    color: "purple",
+                    colleagues: [
+                        {
+                            name: "Sylvie Uzureau",
+                            schools: [
+                                { commune: "La Chapelle des Marais", name: "École Sainte Marie" }
+                            ]
+                        },
+                        {
+                            name: "Isabelle Mazan",
+                            schools: [
+                                { commune: "Montoir de Bretagne", name: "École Saint Étienne" }
+                            ]
+                        },
+                        {
+                            name: "Aurélie Melu",
+                            schools: [
+                                { commune: "Saint Joachim", name: "École Sainte Anne" }
+                            ]
+                        },
+                        {
+                            name: "Christine Bect",
+                            schools: [
+                                { commune: "Saint Nazaire", name: "École Saint Gohard (site Sainte Thérèse)" },
+                                { commune: "Saint Nazaire", name: "École Saint Joseph Notre Dame" },
+                                { commune: "Saint Nazaire", name: "École Saint Joseph de Méan" }
+                            ]
+                        }
+                    ]
+                }
+            }
+        };
+
+        const contactsDB = {
+            "Sandrine Derriano": { email: "", phone: "" },
+            "Françoise Perette": { email: "francoise.perrette@es-sag.fr", phone: "" },
+            "Djamila Brilla": { email: "", phone: "" },
+            "Catherine Nassif": { email: "catherine@nassif.co", phone: "" },
+            "Sylvie Uzureau": { email: "", phone: "" },
+            "Christine Bect": { email: "", phone: "" },
+            "Isabelle Mazan": { email: "", phone: "" },
+            "Aurélie Melu": { email: "", phone: "" }
+        };
+
+        function switchTab(tabId) {
+            const tabs = ['sectors', 'colleagues', 'map'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`tab-${t}`);
+                const view = document.getElementById(`view-${t}`);
+                if (t === tabId) {
+                    btn.className = "px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 bg-indigo-600 text-white shadow-sm flex items-center space-x-2";
+                    view.classList.remove('hidden');
+                } else {
+                    btn.className = "px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 text-indigo-200 hover:text-white flex items-center space-x-2";
+                    view.classList.add('hidden');
+                }
+            });
+
+            if (tabId === 'colleagues') {
+                renderColleaguesView("");
+            }
+        }
+
+        function selectSector(sectorKey) {
+            const sector = database.sectors[sectorKey];
+            document.getElementById('sectors-grid').classList.add('hidden');
+            document.getElementById('back-to-sectors-container').classList.remove('hidden');
+            document.getElementById('sectors-title').innerText = sector.name;
+            document.getElementById('sectors-subtitle').innerText = `Détail des collègues et des écoles rattachées (${sector.totalSchools} écoles au total)`;
+
+            const detailContainer = document.getElementById('sector-detail-container');
+            detailContainer.classList.remove('hidden');
+
+            let html = '<div class="grid grid-cols-1 md:grid-cols-2 gap-6">';
+            sector.colleagues.forEach(colleague => {
+                const contact = contactsDB[colleague.name] || { email: "", phone: "" };
+                html += `
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-4 pb-3 border-b border-slate-100">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-sm">
+                                        ${colleague.name.split(' ').map(n => n[0]).join('')}
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-slate-900">${colleague.name}</h4>
+                                        <span class="text-xs text-indigo-600 font-medium">${colleague.schools.length} école(s) sur ce secteur</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="space-y-2 mb-4">
+                `;
+                colleague.schools.forEach(school => {
+                    html += `
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                            <span class="font-semibold text-slate-800 text-sm"><i class="fa-solid fa-location-dot text-indigo-500 mr-2 text-xs"></i>${school.commune}</span>
+                            <span class="text-slate-600 text-sm">${school.name}</span>
+                        </div>
+                    `;
+                });
+                html += `
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100 flex flex-wrap gap-4 text-xs text-slate-500">
+                            ${contact.email ? `
+                            <div class="flex items-center space-x-1">
+                                <i class="fa-solid fa-envelope text-indigo-500"></i>
+                                <span class="font-medium text-slate-700">${contact.email}</span>
+                            </div>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            detailContainer.innerHTML = html;
+        }
+
+        function resetSectorView() {
+            document.getElementById('sectors-grid').classList.remove('hidden');
+            document.getElementById('sector-detail-container').classList.add('hidden');
+            document.getElementById('back-to-sectors-container').classList.add('hidden');
+            document.getElementById('sectors-title').innerText = "Carte des 3 Secteurs PAS";
+            document.getElementById('sectors-subtitle').innerText = "Cliquez sur un secteur pour explorer ses communes et collègues rattachés";
+        }
+
+        function getAllColleagues() {
+            const map = {};
+            Object.keys(database.sectors).forEach(sectorKey => {
+                const sector = database.sectors[sectorKey];
+                sector.colleagues.forEach(colleague => {
+                    if (!map[colleague.name]) map[colleague.name] = [];
+                    colleague.schools.forEach(school => {
+                        map[colleague.name].push({ sectorName: sector.name, ...school });
+                    });
+                });
+            });
+            return map;
+        }
+
+        function renderColleaguesView(filterText) {
+            const colleaguesMap = getAllColleagues();
+            const pillsContainer = document.getElementById('colleague-pills');
+            const profilesContainer = document.getElementById('colleagues-profiles-container');
+
+            let pillsHtml = `<button onclick="filterColleagues('')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition-colors">Tous (${Object.keys(colleaguesMap).length})</button>`;
+            Object.keys(colleaguesMap).forEach(name => {
+                pillsHtml += `<button onclick="filterColleagues('${name}')" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors">${name}</button>`;
+            });
+            pillsContainer.innerHTML = pillsHtml;
+
+            let profilesHtml = '';
+            const filteredNames = Object.keys(colleaguesMap).filter(name => name.toLowerCase().includes(filterText.toLowerCase()));
+
+            if (filteredNames.length === 0) {
+                profilesHtml = `
+                    <div class="bg-white p-12 rounded-2xl text-center border border-slate-200">
+                        <i class="fa-solid fa-user-slash text-4xl text-slate-300 mb-3"></i>
+                        <p class="text-slate-600 font-medium">Aucune collègue trouvée pour "${filterText}"</p>
+                    </div>
+                `;
+            }
+
+            filteredNames.forEach(name => {
+                const schools = colleaguesMap[name];
+                const contact = contactsDB[name] || { email: "", phone: "" };
+                
+                profilesHtml += `
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 mb-4 border-b border-slate-100 gap-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-600 text-white font-bold flex items-center justify-center text-lg shadow-sm">
+                                    ${name.split(' ').map(n => n[0]).join('')}
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-900">${name}</h3>
+                                    <p class="text-xs text-slate-500">Personnel RA • Intervient sur <span class="font-semibold text-indigo-600">${schools.length} école(s)</span></p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-3 text-xs">
+                                ${contact.email ? `
+                                <div class="bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 flex items-center space-x-2">
+                                    <i class="fa-solid fa-envelope text-indigo-500"></i>
+                                    <span class="font-medium text-slate-700">${contact.email}</span>
+                                </div>` : ''}
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                `;
+                schools.forEach(school => {
+                    profilesHtml += `
+                        <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-100 flex flex-col justify-between">
+                            <div>
+                                <span class="inline-block px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-semibold rounded-md mb-1.5">${school.sectorName}</span>
+                                <p class="font-semibold text-slate-800 text-sm">${school.name}</p>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-2 flex items-center">
+                                <i class="fa-solid fa-location-dot text-slate-400 mr-1.5"></i>${school.commune}
+                            </p>
+                        </div>
+                    `;
+                });
+                profilesHtml += `</div></div>`;
+            });
+            profilesContainer.innerHTML = profilesHtml;
+        }
+
+        function filterColleagues(query) {
+            document.getElementById('colleague-search-input').value = query;
+            renderColleaguesView(query);
+        }
+
+        function selectMapCommune(communeName) {
+            document.getElementById('map-panel-title').innerText = communeName;
+            document.getElementById('map-panel-subtitle').innerText = "Affectations scolaires et collègues rattachés";
+
+            let foundSchools = [];
+            Object.keys(database.sectors).forEach(sectorKey => {
+                const sector = database.sectors[sectorKey];
+                sector.colleagues.forEach(colleague => {
+                    colleague.schools.forEach(school => {
+                        if (school.commune === communeName) {
+                            foundSchools.push({
+                                sectorName: sector.name,
+                                colleagueName: colleague.name,
+                                schoolName: school.name
+                            });
+                        }
+                    });
+                });
+            });
+
+            const panelContent = document.getElementById('map-panel-content');
+            if (foundSchools.length === 0) {
+                panelContent.innerHTML = `<p class="text-sm text-slate-500">Aucune école enregistrée pour cette commune.</p>`;
+                return;
+            }
+
+            let html = '<div class="space-y-3 max-h-[380px] overflow-y-auto pr-1">';
+            foundSchools.forEach(item => {
+                const contact = contactsDB[item.colleagueName] || { email: "", phone: "" };
+                html += `
+                    <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-2">
+                        <div class="flex justify-between items-start">
+                            <span class="text-[10px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-md">${item.sectorName}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm">${item.schoolName}</h4>
+                        <div class="pt-2 border-t border-slate-200/60 text-xs space-y-1 text-slate-600">
+                            <p><strong>Collègue RA :</strong> <span class="text-indigo-600 font-semibold">${item.colleagueName}</span></p>
+                            ${contact.email ? `<p class="flex items-center space-x-1.5"><i class="fa-solid fa-envelope text-indigo-500 text-[10px]"></i> <span>${contact.email}</span></p>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            panelContent.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
