@@ -376,7 +376,7 @@
                             ]
                         },
                         {
-                            name: "Christine Bect",
+                            name: "Gaëlle Granger",
                             schools: [
                                 { commune: "Saint Nazaire", name: "École Notre Dame de Toutes Aides (site Sainte Thérèse)" }
                             ]
@@ -415,7 +415,7 @@
                             ]
                         },
                         {
-                            name: "Christine Bect",
+                            name: "Gaëlle Granger",
                             schools: [
                                 { commune: "Saint Nazaire", name: "École Saint Gohard (site Sainte Thérèse)" },
                                 { commune: "Saint Nazaire", name: "École Saint Joseph Notre Dame" },
@@ -428,14 +428,14 @@
         };
 
         const contactsDB = {
-            "Sandrine Derriano": { email: "deriano.sandrine@gmail.com", d9: true },
-            "Françoise Perette": { email: "francoise.perrette@es-sag.fr", d9: true },
-            "Djamila Brilla": { email: "d.brilla@orange.fr", d9: true },
-            "Catherine Nassif": { email: "catherine.nassif@ac-nantes.fr", d9: true },
-            "Sylvie Leguillier": { email: "syluzureau@gmail.com", d9: true },
-            "Christine Bect": { email: "", d9: false },
-            "Isabelle Mazan": { email: "", d9: false },
-            "Aurélie Melu": { email: "", d9: false }
+            "Sandrine Derriano": { email: "deriano.sandrine@gmail.com", d9: true, d10: false, info: "" },
+            "Françoise Perette": { email: "francoise.perrette@es-sag.fr", d9: true, d10: false, info: "" },
+            "Djamila Brilla": { email: "d.brilla@orange.fr", d9: true, d10: false, info: "" },
+            "Catherine Nassif": { email: "catherine.nassif@ac-nantes.fr", d9: true, d10: false, info: "" },
+            "Sylvie Leguillier": { email: "syluzureau@gmail.com", d9: true, d10: false, info: "" },
+            "Gaëlle Granger": { email: "gaelle.granger@ac-nantes.fr", d9: false, d10: true, info: "Mi-temps (Lundis et mardis)" },
+            "Isabelle Mazan": { email: "", d9: false, d10: true, info: "" },
+            "Aurélie Melu": { email: "", d9: false, d10: true, info: "" }
         };
 
         function copyEmail(email, btnElement) {
@@ -480,7 +480,7 @@
 
             let html = '<div class="grid grid-cols-1 md:grid-cols-2 gap-6">';
             sector.colleagues.forEach(colleague => {
-                const contact = contactsDB[colleague.name] || { email: "", d9: false };
+                const contact = contactsDB[colleague.name] || { email: "", d9: false, d10: false, info: "" };
                 html += `
                     <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between">
                         <div>
@@ -490,9 +490,10 @@
                                         ${colleague.name.split(' ').map(n => n[0]).join('')}
                                     </div>
                                     <div>
-                                        <div class="flex items-center space-x-2">
+                                        <div class="flex items-center space-x-2 flex-wrap gap-1">
                                             <h4 class="font-bold text-slate-900">${colleague.name}</h4>
                                             ${contact.d9 ? '<span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-full">D9</span>' : ''}
+                                            ${contact.d10 ? '<span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-full">D10</span>' : ''}
                                         </div>
                                         <span class="text-xs text-indigo-600 font-medium">${colleague.schools.length} école(s) sur ce secteur</span>
                                     </div>
@@ -511,12 +512,13 @@
                 html += `
                             </div>
                         </div>
-                        <div class="pt-4 border-t border-slate-100 flex flex-wrap gap-4 text-xs text-slate-500">
+                        <div class="pt-4 border-t border-slate-100 flex flex-wrap justify-between items-center text-xs text-slate-500 gap-2">
                             ${contact.email ? `
                             <button onclick="copyEmail('${contact.email}', this)" class="inline-flex items-center space-x-1.5 hover:text-indigo-600 transition-colors cursor-pointer group/btn">
                                 <i class="fa-solid fa-envelope text-indigo-500 group-hover/btn:scale-110 transition-transform"></i>
                                 <span class="font-medium text-slate-700">${contact.email}</span>
-                            </button>` : ''}
+                            </button>` : '<span></span>'}
+                            ${contact.info ? `<span class="text-slate-500 font-medium italic bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-200">${contact.info}</span>` : ''}
                         </div>
                     </div>
                 `;
@@ -572,7 +574,7 @@
 
             filteredNames.forEach(name => {
                 const schools = colleaguesMap[name];
-                const contact = contactsDB[name] || { email: "", d9: false };
+                const contact = contactsDB[name] || { email: "", d9: false, d10: false, info: "" };
                 
                 profilesHtml += `
                     <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
@@ -582,11 +584,12 @@
                                     ${name.split(' ').map(n => n[0]).join('')}
                                 </div>
                                 <div>
-                                    <div class="flex items-center space-x-2">
+                                    <div class="flex items-center space-x-2 flex-wrap gap-1">
                                         <h3 class="text-lg font-bold text-slate-900">${name}</h3>
                                         ${contact.d9 ? '<span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-full">D9</span>' : ''}
+                                        ${contact.d10 ? '<span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded-full">D10</span>' : ''}
                                     </div>
-                                    <p class="text-xs text-slate-500">Personnel RA • Intervient sur <span class="font-semibold text-indigo-600">${schools.length} école(s)</span></p>
+                                    <p class="text-xs text-slate-500">Personnel RA • Intervient sur <span class="font-semibold text-indigo-600">${schools.length} école(s)</span> ${contact.info ? `• <span class="font-semibold text-indigo-600">${contact.info}</span>` : ''}</p>
                                 </div>
                             </div>
                             <div class="flex flex-wrap gap-3 text-xs">
@@ -650,20 +653,20 @@
 
             let html = '<div class="space-y-3 max-h-[380px] overflow-y-auto pr-1">';
             foundSchools.forEach(item => {
-                const contact = contactsDB[item.colleagueName] || { email: "", d9: false };
+                const contact = contactsDB[item.colleagueName] || { email: "", d9: false, d10: false, info: "" };
                 html += `
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-200/80 space-y-2">
                         <div class="flex justify-between items-start">
                             <span class="text-[10px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-0.5 rounded-md">${item.sectorName}</span>
                         </div>
-                        <div class="flex items-center space-x-2">
-                            <h4 class="font-bold text-slate-900 text-sm">${item.schoolName}</h4>
-                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm">${item.schoolName}</h4>
                         <div class="pt-2 border-t border-slate-200/60 text-xs space-y-1 text-slate-600">
-                            <div class="flex items-center space-x-2">
+                            <div class="flex items-center space-x-2 flex-wrap gap-1">
                                 <p><strong>Collègue RA :</strong> <span class="text-indigo-600 font-semibold">${item.colleagueName}</span></p>
                                 ${contact.d9 ? '<span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-1.5 py-0.2 rounded-full">D9</span>' : ''}
+                                ${contact.d10 ? '<span class="bg-purple-100 text-purple-700 text-[10px] font-bold px-1.5 py-0.2 rounded-full">D10</span>' : ''}
                             </div>
+                            ${contact.info ? `<p class="text-slate-500 italic">(${contact.info})</p>` : ''}
                             ${contact.email ? `<button onclick="copyEmail('${contact.email}', this)" class="flex items-center space-x-1.5 hover:text-indigo-600 transition-colors pt-1 cursor-pointer group/btn"><i class="fa-solid fa-envelope text-indigo-500 text-[10px] group-hover/btn:scale-110 transition-transform"></i> <span>${contact.email}</span></button>` : ''}
                         </div>
                     </div>
